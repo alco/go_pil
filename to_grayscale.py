@@ -36,6 +36,6 @@ def convert(image):
 if __name__ == '__main__':
     image = open_image('image.png')
     grayscale = convert(image)
-    save_image(image, 'py_output.png')
+    save_image(grayscale, 'py_output.png')
 
     print_summary()
