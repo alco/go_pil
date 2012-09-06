@@ -10,20 +10,20 @@ import (
     "time"
 )
 
-var bench_total int64
+var bench_total float64
 
 func benchmark(comment string, fun func() interface{}) interface{} {
     t := time.Now()
     result := fun()
-    delta_ms := time.Now().Sub(t).Nanoseconds() / 1000 / 1000
+    delta_ms := float64(time.Now().Sub(t).Nanoseconds()) / 1000 / 1000
     bench_total += delta_ms
-    fmt.Printf("%s took %d ms\n", comment, delta_ms)
+    fmt.Printf("%s took %g ms\n", comment, delta_ms)
     return result
 }
 
 func printSummary() {
     fmt.Println("---")
-    fmt.Printf("Total time: %d ms\n", bench_total)
+    fmt.Printf("Total time: %g ms\n", bench_total)
 }
 
 
@@ -78,9 +78,10 @@ func convertDraw(img image.Image, dst *image.Gray) {
 
 func convertLoop(img image.Image, dst *image.Gray) {
     benchmark("Converting pixels", func() interface{} {
+        rgba := img.(*image.NRGBA)
         for i := 0; i < len(dst.Pix); i++ {
-            _, _, _, a := img.At(i % dst.Stride, i / dst.Stride).RGBA()
-            dst.Pix[i] = uint8(a / 256)
+            pixel := rgba.Pix[i*4 + 3]
+            dst.Pix[i] = pixel
         }
         return nil
     })
