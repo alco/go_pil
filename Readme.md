@@ -39,11 +39,11 @@ Here's benchmark results from my Mac Mini Core i5 2.5 GHz:
     Python 2.7.3
 
     $ python to_grayscale.py
-    Image open took 4.94599342346 ms
-    Converting the image took 5.07497787476 ms
-    Image save took 6.59108161926 ms
+    Image open took 2.65503 ms
+    Converting the image took 3.75509 ms
+    Image save took 6.58894 ms
     ---
-    Total time: 16.6120529175 ms
+    Total time: 12.9991 ms
 
   [1]: http://www.pythonware.com/products/pil/
   [2]: http://golang.org/pkg/image/
