@@ -10,9 +10,9 @@ import (
     "time"
 )
 
-bench_total := 0
+var bench_total int64
 
-func benchmark(comment string, fun func) interface{} {
+func benchmark(comment string, fun func() interface{}) interface{} {
     t := time.Now()
     result := fun()
     delta_ms := time.Now().Sub(t).Nanoseconds() / 1000 / 1000
@@ -27,26 +27,26 @@ func printSummary() {
 }
 
 
-func openImage(path) image.Image {
+func openImage(path string) image.Image {
     // Open the file.
-    file, err := os.Open("font_vinque.png")
+    file, err := os.Open(path)
     if err != nil {
         log.Fatal(err)
     }
     defer file.Close()
 
     // Decode the image.
-    return benchmark("Image decode", func() {
+    return benchmark("Image decode", func() interface{} {
         img, err := png.Decode(file)
         if err != nil {
             log.Fatal(err)
             return nil
         }
         return img
-    })
+    }).(image.Image)
 }
 
-func saveImage(image, path) {
+func saveImage(image image.Image, path string) {
     // Create or truncate the file.
     out_file, err := os.Create(path)
     if err != nil {
@@ -55,43 +55,54 @@ func saveImage(image, path) {
     defer out_file.Close()
 
     // Save the image
-    return benchmark("Image save", func() {
+    benchmark("Image save", func() interface{} {
         err = png.Encode(out_file, image)
         if err != nil {
             log.Fatal(err)
             return nil
         }
+        return nil
     })
 }
 
-func newGray(bounds image.Rect) image.Gray {
-    return benchmark("Creating an empty image", func() {
+func newGray(bounds image.Rectangle) *image.Gray {
+    return benchmark("Creating an empty image", func() interface{} {
         return image.NewGray(bounds)
-    })
+    }).(*image.Gray)
 }
 
-func convertDraw(img image.Image, dst image.Gray) {
-    return benchmark("Drawing the image", func() {
+func convertDraw(img image.Image, dst *image.Gray) {
+    benchmark("Drawing the image", func() interface{} {
         draw.Draw(dst, dst.Bounds(), img, image.ZP, draw.Src)
+        return nil
     })
 }
 
-func convertLoop(img image.Image, dst image.Gray) {
-    return benchmark("Converting pixels", func() {
+func convertLoop(img image.Image, dst *image.Gray) {
+    benchmark("Converting pixels", func() interface{} {
         for i := 0; i < len(dst.Pix); i++ {
             _, _, _, a := img.At(i % dst.Stride, i / dst.Stride).RGBA()
-            grayscale.Pix[i] = uint8(a / 256)
+            dst.Pix[i] = uint8(a / 256)
         }
+        return nil
     })
 }
 
 
 func main() {
-    image := openImage("image.png")
-    grayscale := newGray(image.Bounds())
-    convertDraw(image, grayscale)
-    convertLoop(image, grayscale)
-    saveImage(grayscale, "go_output.png")
+    for i := 0; i < 2; i++ {
+        bench_total = 0
 
-    printSummary()
+        image := openImage("image.png")
+        grayscale := newGray(image.Bounds())
+        if i == 0 {
+            convertDraw(image, grayscale)
+        } else {
+            convertLoop(image, grayscale)
+        }
+        saveImage(grayscale, "go_output.png")
+
+        printSummary()
+        fmt.Println()
+    }
 }
