@@ -36,13 +36,12 @@ func openImage(path string) image.Image {
     defer file.Close()
 
     // Decode the image.
-    return benchmark("Image decode", func() interface{} {
+    return benchmark("Image decode", func() (img interface{}) {
         img, err := png.Decode(file)
         if err != nil {
             log.Fatal(err)
-            return nil
         }
-        return img
+        return
     }).(image.Image)
 }
 
@@ -55,13 +54,12 @@ func saveImage(image image.Image, path string) {
     defer out_file.Close()
 
     // Save the image
-    benchmark("Image save", func() interface{} {
+    benchmark("Image save", func() (_ interface{}) {
         err = png.Encode(out_file, image)
         if err != nil {
             log.Fatal(err)
-            return nil
         }
-        return nil
+        return
     })
 }
 
