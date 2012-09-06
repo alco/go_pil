@@ -14,12 +14,12 @@ def benchmark(comment, fun):
     result = fun()
     delta_ms = (time.time() - t) * 1000
     bench_total += delta_ms
-    print '%s took %s ms' % (comment, delta_ms)
+    print '%s took %g ms' % (comment, delta_ms)
     return result
 
 def print_summary():
     print '---'
-    print 'Total time: %s ms' % bench_total
+    print 'Total time: %g ms' % bench_total
 
 
 def open_image(path):
