@@ -78,9 +78,17 @@ func convertDraw(img image.Image, dst *image.Gray) {
 
 func convertLoop(img image.Image, dst *image.Gray) {
     benchmark("Converting pixels", func() interface{} {
+        // We're ignoring alpha here because it's arguable that pixels should
+        // be multiplied by its value. It would make more sense to output
+        // Gray+Alpha if the input image is RGBA.
         rgba := img.(*image.NRGBA)
         for i := 0; i < len(dst.Pix); i++ {
-            dst.Pix[i] = uint8(0.299 * float32(rgba.Pix[i*4]) + 0.587 * float32(rgba.Pix[i*4+1]) + 0.114 * float32(rgba.Pix[i*4+1]))
+            src_i := i * 4
+            r := uint32(rgba.Pix[src_i])
+            g := uint32(rgba.Pix[src_i+1])
+            b := uint32(rgba.Pix[src_i+2])
+            dst.Pix[i] = uint8((r*299 + g*587 + b*114) / 1000)
+
         }
         return nil
     })
