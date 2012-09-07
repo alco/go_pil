@@ -1,7 +1,7 @@
 Go vs PIL
 =========
 
-This is a performance comparison between [PIL][1] and Go's [image package][2].
+This is a performance comparison between [PIL][1] and Go's [image package][2]. See related discussion at [go-nuts][3] mailing list.
 
 
 Run the Python script with:
@@ -15,35 +15,27 @@ Run the Go program with:
 
 ## Sample timings ##
 
-Here's benchmark results from my Mac Mini Core i5 2.5 GHz:
+Here are sample timings from my Mac Mini Core i5 2.5 GHz. These are timings from one run, not averages, but they're representative enough.
+
+    +---------------------------------------------+
+    |                   | Python, ms | Go, ms     |
+    +===================+============+============+
+    | Image decode      | 3.12781    | 15.611     |
+    | RGBA -> Grayscale | 0.876188   | 2.701      |
+    | Image save        | 6.55293    | 33.886     |
+    +-------------------+------------+------------+
+    | Total             | 10.5569    | 57.498     |
+    +---------------------------------------------+
 
     $ go version
     go version go1.0.2
 
-    $ go run to_grayscale.go
-    Image decode took 15.508 ms
-    Creating an empty image took 0.027 ms
-    Drawing the image took 43.289 ms
-    Image save took 31.448 ms
-    ---
-    Total time: 90.27199999999999 ms
-
-    Image decode took 17.162 ms
-    Creating an empty image took 0.049 ms
-    Converting pixels took 0.609 ms
-    Image save took 35.479 ms
-    ---
-    Total time: 53.299 ms
-
     $ python --version
     Python 2.7.3
 
-    $ python to_grayscale.py
-    Image open took 2.65503 ms
-    Converting the image took 3.75509 ms
-    Image save took 6.58894 ms
-    ---
-    Total time: 12.9991 ms
+    PIL version 1.1.7
+
 
   [1]: http://www.pythonware.com/products/pil/
   [2]: http://golang.org/pkg/image/
+  [3]: https://groups.google.com/group/golang-nuts/browse_thread/thread/47143dea57243d0e/5686f7aadae4fa06#5686f7aadae4fa06
