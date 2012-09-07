@@ -17,18 +17,21 @@ Run the Go program with:
 
 Here are sample timings from my Mac Mini Core i5 2.5 GHz. These are timings from one run, not averages, but they're representative enough.
 
-    +---------------------------------------------+
-    |                   | Python, ms | Go, ms     |
-    +===================+============+============+
-    | Image decode      | 3.12781    | 15.611     |
-    | RGBA -> Grayscale | 0.876188   | 2.701      |
-    | Image save        | 6.55293    | 33.886     |
-    +-------------------+------------+------------+
-    | Total             | 10.5569    | 57.498     |
-    +---------------------------------------------+
+    +---------------------------------------------+------------+
+    |                   | Python, ms | Go, ms     | Go tip, ms |
+    +===================+============+============+============+
+    | Image decode      |       3.13 |      15.61 |       6.81 |
+    | RGBA -> Grayscale |       0.88 |       2.70 |       1.54 |
+    | Image save        |       6.55 |      33.89 |      24.26 |
+    +-------------------+------------+------------+------------+
+    | Total             |      10.56 |      57.50 |      32.65 |
+    +---------------------------------------------+------------+
 
     $ go version
     go version go1.0.2
+
+    go tip version
+    14026:4a9c3b3e39c6
 
     $ python --version
     Python 2.7.3
