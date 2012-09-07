@@ -80,7 +80,7 @@ func convertLoop(img image.Image, dst *image.Gray) {
     benchmark("Converting pixels", func() interface{} {
         rgba := img.(*image.NRGBA)
         for i := 0; i < len(dst.Pix); i++ {
-            dst.Pix[i] = rgba.Pix[i*4 + 3]
+            dst.Pix[i] = uint8(0.299 * float32(rgba.Pix[i*4]) + 0.587 * float32(rgba.Pix[i*4+1]) + 0.114 * float32(rgba.Pix[i*4+1]))
         }
         return nil
     })
