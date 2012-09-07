@@ -15,7 +15,7 @@ Run the Go program with:
 
 ## Sample timings ##
 
-Here are sample timings from my Mac Mini Core i5 2.5 GHz. These are timings from one run, not averages, but they're representative enough.
+Here are sample timings from my MacBook Pro Core i7 2.2 GHz. These are timings from one run, not averages, but they're representative enough.
 
     +---------------------------------------------+------------+
     |                   | Python, ms | Go, ms     | Go tip, ms |
