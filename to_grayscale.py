@@ -23,7 +23,9 @@ def print_summary():
 
 
 def open_image(path):
-    return benchmark("Image open", lambda: Image.open(path))
+    image = Image.open(path)
+    benchmark("Image decode", lambda: image.load())
+    return image
 
 def save_image(image, path):
     return benchmark("Image save", lambda: image.save(path))
