@@ -81,13 +81,19 @@ func convertLoop(img image.Image, dst *image.Gray) {
 		// be multiplied by its value. It would make more sense to output
 		// Gray+Alpha if the input image is RGBA.
 		rgba := img.(*image.NRGBA)
-		for i := 0; i < len(dst.Pix); i++ {
-			src_i := i * 4
-			r := uint32(rgba.Pix[src_i])
-			g := uint32(rgba.Pix[src_i+1])
-			b := uint32(rgba.Pix[src_i+2])
-			dst.Pix[i] = uint8((r*299 + g*587 + b*114) / 1000)
+		rgbaPix := rgba.Pix
+		dstPix := dst.Pix
+		rgbaPixLen := len(rgbaPix)
+		var r, g, b uint32
 
+		for iRgba, iDst := 0, 0; iRgba < rgbaPixLen; {
+			r = uint32(rgbaPix[iRgba])
+			g = uint32(rgbaPix[iRgba+1])
+			b = uint32(rgbaPix[iRgba+2])
+			dstPix[iDst] = uint8((r*299 + g*587 + b*114) / 1000)
+
+			iRgba += 4
+			iDst += 1
 		}
 		return nil
 	})
